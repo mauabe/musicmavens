@@ -1,60 +1,39 @@
-import React, { Component} from'react';
-import axios from 'axios'
+import React, { Component } from'react';
+import axios from 'axios';
+import Search from './Search';
+import Artist from './Artist';
+import Tracks from './Tracks';
 
-const API_ADDRESS = 'https://spotify-api-wrapper.appspot.com/'
 const URL = 'https://spotify-api-wrapper.appspot.com/'
 
-// let result = () => {
-//   axios.get(URL)
-//   .then((response) => {
-//     console.log(response);
-//     return response;
-//   })
-//   .catch((error) => {
-//     console.log(error);
-//   });
-// }
-
-
 class App extends Component{
-  state = { artistQuery: '', artist: null, tracks: []};
+  state = { artist: null, tracks: []};
 
-  updateArtistQuery = (event) => {
-    this.setState({artistQuery: event.target.value})
-  }
-
-  handleKeyPress = event => {
-    if(event.key === 'Enter'){
-      this.searchArtist();
-    }
-  }
+  // componenDidMount(){
+  //   this.searchArtist('elvis presley')
+  // }
 
   //using fetch
   // searchArtist = () => {
-  //   console.log('this.state', this.state);
   //   fetch(`${API_ADDRESS}/artist/${this.state.artistQuery}`)
-  //   .then(response => response.json())
-  //   .then(json => {
-  //     console.log('json', json)
-  //   })
-  //   .catch(error => {
-  //     console.log('error', error)
-  //   })
+  //     .then(response => response.json())
+  //     .then(json => {console.log('json', json)})
+  //     .catch(error => {console.log('error', error)})
   // }
 
   //using axios, baby!
-  searchArtist = () => {
-    axios.get(`${URL}/artist/${this.state.artistQuery}`)
+  searchArtist = artistQuery => {
+    axios.get(`${URL}/artist/${artistQuery}`)
     .then((response) => {
       if (response.data.artists.items.length > 0){
         const artist = response.data.artists.items[0];
         const artistId = response.data.artists.items[0].id;
+
         this.setState({ artist, artistId })
 
         axios.get(`${URL}/artist/${artistId}/top-tracks`)
           .then(tracksObj => {
             this.setState({ tracks: tracksObj.data.tracks })
-            // console.log('tracks tracksObj', tracksObj.data.tracks)
           })
           .catch(error => alert(error.message))
       }
@@ -62,22 +41,17 @@ class App extends Component{
     .catch(error => alert(error.message))
   }
   
-
   render(){
-    console.log('this.state at render', this.state);
+    // console.log('this.state at render', this.state);
     return(
       <div> 
-        <h2>mmavens</h2>
-        <input 
-          onChange={this.updateArtistQuery}
-          placeholder='Search for and Artist' 
-          onKeyPress={this.handleKeyPress}
-          />
-        <button onClick={this.searchArtist}> Search</button>
+        <h2>Music-Mavens</h2>
+        <Search searchArtist={this.searchArtist} />
+        <Artist artist={this.state.artist} />
+        <Tracks tracks={this.state.tracks} />
       </div>
-    )
+    );
   }
 }
-
 
 export default App;
