@@ -15,7 +15,7 @@
     "@babel/core": "^7.2.2",
     "@babel/plugin-proposal-class-properties": "^7.2.3",
     "acorn": "^6.4.1",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "live-server": "^1.2.1",
     "lodash": "^4.17.19",
     "minimist": "^1.2.5",
